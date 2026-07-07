@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cada día más cerca de ti ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink-1: #ff6b9d;
+    --pink-2: #c44569;
+    --purple-1: #a855f7;
+    --purple-2: #6c5ce7;
+    --gold: #f7d794;
+    --dark: #1a0a2e;
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: 'Quicksand', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+    background: linear-gradient(-45deg, #1a0a2e, #2d1b4e, #4a1942, #1a0a2e, #2d1b4e);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    position: relative;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ===== PARTICULAS FLOTANTES ===== */
+  #particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ===== CONTENEDOR PRINCIPAL ===== */
+  .main-container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 40px;
+  }
+
+  /* ===== HEADER / TITULO ===== */
+  .header-section {
+    text-align: center;
+    animation: fadeInDown 1.2s ease;
+  }
+
+  .header-section h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    background: linear-gradient(135deg, var(--gold), var(--pink-1), var(--purple-1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(255, 107, 157, 0.3);
+    margin-bottom: 10px;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+  }
+
+  .header-section p {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* ===== SECCION DE CORAZONES SEMANALES ===== */
+  .hearts-section {
+    width: 100%;
+    max-width: 900px;
+    animation: fadeInUp 1.2s ease 0.3s both;
+  }
+
+  .hearts-section h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--gold);
+  }
+
+  .hearts-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 30px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .heart-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .heart-day:hover {
+    transform: translateY(-8px);
+  }
+
+  .heart-day:hover .heart-icon {
+    filter: brightness(1.4);
+  }
+
+  .heart-wrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+  }
+
+  .heart-icon {
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0 5px 15px rgba(255, 107, 157, 0.3));
+  }
+
+  .heart-icon .heart-bg {
+    fill: rgba(255, 255, 255, 0.1);
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 1.5;
+  }
+
+  .heart-icon .heart-fill {
+    fill: url(#heartGradient);
+    stroke: none;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .heart-day.filled .heart-icon .heart-fill {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .heart-day.filled .heart-icon {
+    filter: drop-shadow(0 5px 25px rgba(255, 107, 157, 0.7));
+    animation: heartPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes heartPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  .day-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+  }
+
+  .heart-day.filled .day-label {
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(247, 215, 148, 0.5);
+  }
+
+  /* ===== CORAZON CENTRAL UNIDO ===== */
+  .united-heart-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: fadeInUp 1.2s ease 0.6s both;
+  }
+
+  .united-heart-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+
+  .united-heart-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 40px rgba(255, 107, 157, 0.5));
+    animation: bigHeartBeat 2.5s ease-in-out infinite;
+  }
+
+  @keyframes bigHeartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.1); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.05); }
+    60% { transform: scale(1); }
+  }
+
+  .united-heart-svg .big-heart-bg {
+    fill: rgba(255, 255, 255, 0.05);
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 2;
+  }
+
+  .united-heart-svg .big-heart-fill {
+    fill: url(#bigHeartGradient);
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  .united-heart-container.complete .big-heart-fill {
+    opacity: 1;
+  }
+
+  .united-heart-container .progress-ring {
+    position: absolute;
+    top: -15px; left: -15px;
+    width: 230px; height: 230px;
+    transform: rotate(-90deg);
+  }
+
+  .progress-ring circle {
+    fill: none;
+    stroke-width: 3;
+  }
+
+  .progress-ring .ring-bg {
+    stroke: rgba(255, 255, 255, 0.1);
+  }
+
+  .progress-ring .ring-fill {
+    stroke: url(#ringGradient);
+    stroke-linecap: round;
+    stroke-dasharray: 660;
+    stroke-dashoffset: 660;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .united-text {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .united-text h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--pink-1);
+    margin-bottom: 10px;
+  }
+
+  .united-text p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ===== CONTADOR DE DIAS ===== */
+  .counter-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    animation: fadeInUp 1.2s ease 0.9s both;
+  }
+
+  .counter-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 25px 35px;
+    text-align: center;
+    min-width: 140px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .counter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(255, 107, 157, 0.2);
+  }
+
+  .counter-number {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--pink-1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    line-height: 1;
+  }
+
+  .counter-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 8px;
+  }
+
+  /* ===== MENSAJE ROMANTICO ===== */
+  .message-section {
+    max-width: 700px;
+    text-align: center;
+    padding: 40px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 1.2s ease 1.2s both;
+  }
+
+  .message-section .quote-icon {
+    font-size: 3rem;
+    color: var(--pink-1);
+    opacity: 0.5;
+    margin-bottom: 15px;
+  }
+
+  .message-section p {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  .message-section .signature {
+    margin-top: 20px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    font-style: normal;
+    letter-spacing: 2px;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer-section {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    animation: fadeInUp 1.2s ease 1.5s both;
+  }
+
+  .footer-section .mini-hearts {
+    display: inline-flex;
+    gap: 5px;
+    margin: 0 5px;
+  }
+
+  .footer-section .mini-hearts span {
+    color: var(--pink-1);
+    animation: miniPulse 1.5s ease-in-out infinite;
+  }
+
+  .footer-section .mini-hearts span:nth-child(2) { animation-delay: 0.3s; }
+  .footer-section .mini-hearts span:nth-child(3) { animation-delay: 0.6s; }
+
+  @keyframes miniPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* ===== ANIMACIONES GENERALES ===== */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hearts-container { gap: 10px; padding: 20px 15px; }
+    .heart-wrapper { width: 50px; height: 50px; }
+    .day-label { font-size: 0.7rem; }
+    .united-heart-container { width: 150px; height: 150px; }
+    .united-heart-container .progress-ring { width: 180px; height: 180px; top: -15px; left: -15px; }
+    .counter-card { padding: 20px 25px; min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<div class="main-container">
+
+  <!-- HEADER -->
+  <header class="header-section">
+    <h1>Cada día más cerca de ti</h1>
+    <p>Porque cada amanecer sin ti cuenta, y cada atardecer juntos es un regalo</p>
+  </header>
+
+  <!-- CORAZONES DE LA SEMANA -->
+  <section class="hearts-section">
+    <h2>Nuestra semana latiendo juntos</h2>
+    <div class="hearts-container" id="hearts-container">
+      <!-- SVG defs compartidos -->
+      <svg style="position:absolute;width:0;height:0;">
+        <defs>
+          <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff6b9d"/>
+            <stop offset="50%" stop-color="#c44569"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+          <linearGradient id="bigHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff6b9d"/>
+            <stop offset="30%" stop-color="#c44569"/>
+            <stop offset="70%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#6c5ce7"/>
+          </linearGradient>
+          <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#f7d794"/>
+            <stop offset="50%" stop-color="#ff6b9d"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- Los 7 días -->
+      <div class="heart-day" data-day="0">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Lunes</span>
+      </div>
+
+      <div class="heart-day" data-day="1">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Martes</span>
+      </div>
+
+      <div class="heart-day" data-day="2">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Miércoles</span>
+      </div>
+
+      <div class="heart-day" data-day="3">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Jueves</span>
+      </div>
+
+      <div class="heart-day" data-day="4">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Viernes</span>
+      </div>
+
+      <div class="heart-day" data-day="5">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Sábado</span>
+      </div>
+
+      <div class="heart-day" data-day="6">
+        <div class="heart-wrapper">
+          <svg class="heart-icon" viewBox="0 0 100 100">
+            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+          </svg>
+        </div>
+        <span class="day-label">Domingo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORAZON CENTRAL UNIDO -->
+  <section class="united-heart-section">
+    <div class="united-heart-container" id="united-heart">
+      <svg class="progress-ring" viewBox="0 0 230 230">
+        <circle class="ring-bg" cx="115" cy="115" r="105"/>
+        <circle class="ring-fill" id="progress-ring-fill" cx="115" cy="115" r="105"/>
+      </svg>
+      <svg class="united-heart-svg" viewBox="0 0 100 100">
+        <path class="big-heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+        <path class="big-heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+      </svg>
+    </div>
+    <div class="united-text">
+      <h3 id="united-title">Nuestro corazón se llena día a día</h3>
+      <p id="united-message">Cada día que pasa es un latido más que nos une. Aunque no nos veamos todos los días, mi corazón late por ti en cada amanecer.</p>
+    </div>
+  </section>
+
+  <!-- CONTADOR -->
+  <section class="counter-section">
+    <div class="counter-card">
+      <span class="counter-number" id="counter-days">0</span>
+      <span class="counter-label">Días juntos</span>
+    </div>
+    <div class="counter-card">
+      <span class="counter-number" id="counter-hours">0</span>
+      <span class="counter-label">Horas pensándote</span>
+    </div>
+    <div class="counter-card">
+      <span class="counter-number" id="counter-kisses">0</span>
+      <span class="counter-label">Besos enviados</span>
+    </div>
+  </section>
+
+  <!-- MENSAJE -->
+  <section class="message-section">
+    <div class="quote-icon">❝</div>
+    <p>No importa la distancia ni los días que pasen sin vernos, porque cada segundo que vivo es un segundo más cerca de volver a tus brazos. Eres mi primer pensamiento al despertar y el último antes de dormir.</p>
+    <div class="signature">— Con todo mi amor ♥</div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer-section">
+    Hecho con mucho amor
+    <span class="mini-hearts">
+      <span>♥</span><span>♥</span><span>♥</span>
+    </span>
+    para ti
+  </footer>
+
+</div>
+
+<script>
+  // ===== PARTICULAS FLOTANTES =====
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+      this.opacity = Math.random() * 0.5 + 0.1;
+      this.color = ['#ff6b9d', '#a855f7', '#f7d794', '#c44569'][Math.floor(Math.random() * 4)];
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+        this.reset();
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = this.opacity;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  for (let i = 0; i < 80; i++) {
+    particles.push(new Particle());
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // ===== LOGICA DE CORAZONES POR DIA =====
+  function updateHearts() {
+    const today = new Date().getDay();
+    // getDay() returns 0=Sunday, 1=Monday...6=Saturday
+    // Map to our order: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+    const dayMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 };
+    const currentDayIndex = dayMap[today];
+
+    const heartDays = document.querySelectorAll('.heart-day');
+    heartDays.forEach((heart, index) => {
+      if (index <= currentDayIndex) {
+        setTimeout(() => {
+          heart.classList.add('filled');
+        }, index * 300);
+      }
+    });
+
+    // Update progress ring
+    const progress = ((currentDayIndex + 1) / 7) * 660;
+    const ringFill = document.getElementById('progress-ring-fill');
+    setTimeout(() => {
+      ringFill.style.strokeDashoffset = 660 - progress;
+    }, 500);
+
+    // Update united heart
+    const unitedHeart = document.getElementById('united-heart');
+    if (currentDayIndex === 6) {
+      setTimeout(() => {
+        unitedHeart.classList.add('complete');
+        document.getElementById('united-title').textContent = '¡Nuestro corazón está completo!';
+        document.getElementById('united-message').textContent = 'Una semana más latiendo juntos. Cada día a tu lado es un regalo que atesoro con todo mi ser. ¡Te amo!';
+      }, 2500);
+    } else {
+      const daysLeft = 6 - currentDayIndex;
+      document.getElementById('united-message').textContent = 
+        `Faltan ${daysLeft} día${daysLeft !== 1 ? 's' : ''} para completar nuestra semana de amor. Cada latido me acerca más a ti.`;
+    }
+  }
+
+  // ===== CONTADORES =====
+  function updateCounters() {
+    const startDate = new Date("2026-06-05T00:00:00");
+    const now = new Date();
+    const diff = now - startDate;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const kisses = days * 1000 + Math.floor(hours / 24 * 500);
+
+    animateNumber('counter-days', days);
+    animateNumber('counter-hours', hours);
+    animateNumber('counter-kisses', kisses);
+  }
+
+  function animateNumber(elementId, target) {
+    const el = document.getElementById(elementId);
+    const duration = 2000;
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(start + (target - start) * eased).toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ===== INICIALIZAR =====
+  window.addEventListener('load', () => {
+    setTimeout(updateHearts, 800);
+    setTimeout(updateCounters, 1200);
+  });
+
+  // ===== CLICK EN CORAZONES =====
+  document.querySelectorAll('.heart-day').forEach(heart => {
+    heart.addEventListener('click', function() {
+      this.style.transform = 'scale(1.2)';
+      setTimeout(() => { this.style.transform = ''; }, 300);
+      
+      // Burst effect
+      for (let i = 0; i < 8; i++) {
+        createBurstParticle(this);
+      }
+    });
+  });
+
+  function createBurstParticle(element) {
+    const rect = element.getBoundingClientRect();
+    const particle = document.createElement('div');
+    particle.style.cssText = `
+      position: fixed;
+      left: ${rect.left + rect.width/2}px;
+      top: ${rect.top + rect.height/2}px;
+      width: 8px; height: 8px;
+      background: ${['#ff6b9d','#a855f7','#f7d794'][Math.floor(Math.random()*3)]};
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000;
+      transition: all 0.8s ease-out;
+    `;
+    document.body.appendChild(particle);
+
+    requestAnimationFrame(() => {
+      particle.style.left = `${rect.left + rect.width/2 + (Math.random()-0.5)*100}px`;
+      particle.style.top = `${rect.top + rect.height/2 + (Math.random()-0.5)*100}px`;
+      particle.style.opacity = '0';
+      particle.style.transform = 'scale(0)';
+    });
+
+    setTimeout(() => particle.remove(), 800);
+  }
+</script>
+</body>
+</html>
