@@ -92,6 +92,71 @@
     letter-spacing: 1px;
   }
 
+  /* ===== SELECTORES DE FECHA ===== */
+  .date-selectors-section {
+    width: 100%;
+    max-width: 700px;
+    animation: fadeInUp 1.2s ease 0.2s both;
+  }
+
+  .date-selectors-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 30px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(255, 182, 193, 0.2), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .date-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+  }
+
+  .date-selector label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .date-selector input[type="date"] {
+    padding: 12px 15px;
+    border: 2px solid var(--glass-border);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .date-selector input[type="date"]:hover {
+    border-color: var(--pink-soft);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .date-selector input[type="date"]:focus {
+    border-color: var(--pink-pastel);
+    box-shadow: 0 0 15px rgba(255, 182, 193, 0.3);
+  }
+
+  .date-selector input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5) sepia(1) saturate(2) hue-rotate(300deg);
+  }
+
   /* ===== SECCION DE CORAZONES SEMANALES ===== */
   .hearts-section {
     width: 100%;
@@ -413,6 +478,8 @@
     .united-heart-container { width: 150px; height: 150px; }
     .united-heart-container .progress-ring { width: 180px; height: 180px; top: -15px; left: -15px; }
     .countdown-card { padding: 20px 25px; min-width: 100px; }
+    .date-selectors-container { flex-direction: column; align-items: stretch; }
+    .date-selector { min-width: 100%; }
   }
 </style>
 </head>
@@ -427,6 +494,20 @@
     <h1>Cada día más cerca de usted</h1>
     <p>Porque cada amanecer sin verla cuenta, y cada momento juntos es un regalo</p>
   </header>
+
+  <!-- SELECTORES DE FECHA -->
+  <section class="date-selectors-section">
+    <div class="date-selectors-container">
+      <div class="date-selector">
+        <label for="last-meeting">Última vez que nos vimos</label>
+        <input type="date" id="last-meeting" />
+      </div>
+      <div class="date-selector">
+        <label for="next-meeting">Próxima vez que nos veremos</label>
+        <input type="date" id="next-meeting" />
+      </div>
+    </div>
+  </section>
 
   <!-- CORAZONES DE LA SEMANA -->
   <section class="hearts-section">
@@ -568,7 +649,7 @@
   <!-- MENSAJE -->
   <section class="message-section">
     <div class="quote-icon">❝</div>
-    <p>No importa la distancia ni los días que pasen sin verla, porque cada segundo que que pienso en usted Mel es un segundo más cerca de volver a sus brazos. Es usted mi primer pensamiento al despertar y el último antes de dormir.</p>
+    <p>No importa la distancia ni los días que pasen sin verla, porque cada segundo que pienso en usted Mel es un segundo más cerca de volver a sus brazos. Es usted mi primer pensamiento al despertar y el último antes de dormir.</p>
     <div class="signature">— Con todo mi amor ♥</div>
   </section>
 
@@ -637,76 +718,157 @@
   }
   animateParticles();
 
+  // ===== VARIABLES GLOBALES =====
+  let lastMeetingDate = null;
+  let nextMeetingDate = null;
+
+  // ===== SELECTORES DE FECHA =====
+  const lastMeetingInput = document.getElementById('last-meeting');
+  const nextMeetingInput = document.getElementById('next-meeting');
+
+  // Cargar fechas guardadas del localStorage
+  const savedLastMeeting = localStorage.getItem('lastMeeting');
+  const savedNextMeeting = localStorage.getItem('nextMeeting');
+
+  if (savedLastMeeting) {
+    lastMeetingInput.value = savedLastMeeting;
+    lastMeetingDate = new Date(savedLastMeeting);
+  }
+
+  if (savedNextMeeting) {
+    nextMeetingInput.value = savedNextMeeting;
+    nextMeetingDate = new Date(savedNextMeeting);
+  }
+
+  // Event listeners para los selectores
+  lastMeetingInput.addEventListener('change', function() {
+    lastMeetingDate = new Date(this.value);
+    localStorage.setItem('lastMeeting', this.value);
+    updateAll();
+  });
+
+  nextMeetingInput.addEventListener('change', function() {
+    nextMeetingDate = new Date(this.value);
+    localStorage.setItem('nextMeeting', this.value);
+    updateAll();
+  });
+
+  // ===== ACTUALIZAR TODO =====
+  function updateAll() {
+    updateHearts();
+    updateCountdown();
+  }
+
   // ===== LOGICA DE CORAZONES POR DIA =====
   function updateHearts() {
-    const today = new Date().getDay();
-    // getDay() returns 0=Sunday, 1=Monday...6=Saturday
-    // Map to our order: Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
-    const dayMap = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6 };
-    const currentDayIndex = dayMap[today];
+    if (!lastMeetingDate || !nextMeetingDate) {
+      // Si no hay fechas seleccionadas, usar la lógica original basada en el día actual
+      const today = new Date().getDay();
+      const heartDays = document.querySelectorAll('.heart-day');
+      heartDays.forEach((heart, index) => {
+        if (index <= today) {
+          setTimeout(() => {
+            heart.classList.add('filled');
+          }, index * 300);
+        } else {
+          heart.classList.remove('filled');
+        }
+      });
 
+      const progress = ((today + 1) / 7) * 660;
+      const ringFill = document.getElementById('progress-ring-fill');
+      setTimeout(() => {
+        ringFill.style.strokeDashoffset = 660 - progress;
+      }, 500);
+
+      const unitedHeart = document.getElementById('united-heart');
+      if (today === 6) {
+        setTimeout(() => {
+          unitedHeart.classList.add('complete');
+          document.getElementById('united-title').textContent = '¡Nuestro corazón está completo!';
+          document.getElementById('united-message').textContent = 'Una semana más latiendo juntos. Cada día a su lado es un regalo que atesoro con todo mi ser. ¡La amo!';
+        }, 2500);
+      } else {
+        const daysLeft = 6 - today;
+        document.getElementById('united-message').textContent = 
+          `Faltan ${daysLeft} día${daysLeft !== 1 ? 's' : ''} para completar nuestra semana de amor. Cada latido me acerca más a usted.`;
+      }
+      return;
+    }
+
+    // Calcular el progreso basado en las fechas seleccionadas
+    const now = new Date();
+    const totalDuration = nextMeetingDate - lastMeetingDate;
+    const elapsed = now - lastMeetingDate;
+    
+    if (elapsed < 0) {
+      // Aún no ha empezado el período
+      document.querySelectorAll('.heart-day').forEach(heart => heart.classList.remove('filled'));
+      const ringFill = document.getElementById('progress-ring-fill');
+      ringFill.style.strokeDashoffset = 660;
+      document.getElementById('united-heart').classList.remove('complete');
+      document.getElementById('united-title').textContent = 'Esperando el momento';
+      document.getElementById('united-message').textContent = 'Aún no ha llegado el momento de nuestra próxima cita, pero cada segundo cuenta.';
+      return;
+    }
+
+    const progress = Math.min(elapsed / totalDuration, 1);
+    const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+    const totalDays = Math.ceil(totalDuration / (1000 * 60 * 60 * 24));
+    
+    // Calcular qué día de la semana estamos
+    const currentDayOfWeek = now.getDay();
+    
+    // Llenar corazones basado en el progreso
     const heartDays = document.querySelectorAll('.heart-day');
+    const heartsToFill = Math.floor(progress * 7);
+    
     heartDays.forEach((heart, index) => {
-      if (index <= currentDayIndex) {
+      if (index < heartsToFill) {
         setTimeout(() => {
           heart.classList.add('filled');
         }, index * 300);
+      } else {
+        heart.classList.remove('filled');
       }
     });
 
-    // Update progress ring
-    const progress = ((currentDayIndex + 1) / 7) * 660;
+    // Actualizar anillo de progreso
+    const ringProgress = progress * 660;
     const ringFill = document.getElementById('progress-ring-fill');
     setTimeout(() => {
-      ringFill.style.strokeDashoffset = 660 - progress;
+      ringFill.style.strokeDashoffset = 660 - ringProgress;
     }, 500);
 
-    // Update united heart
+    // Actualizar corazón central
     const unitedHeart = document.getElementById('united-heart');
-    if (currentDayIndex === 6) {
+    if (progress >= 1) {
       setTimeout(() => {
         unitedHeart.classList.add('complete');
         document.getElementById('united-title').textContent = '¡Nuestro corazón está completo!';
-        document.getElementById('united-message').textContent = 'Una semana más latiendo juntos. Cada día a su lado es un regalo que atesoro con todo mi ser. ¡La amo!';
+        document.getElementById('united-message').textContent = '¡Ha llegado el día! Cada momento juntos es un regalo que atesoro con todo mi ser. ¡La amo!';
       }, 2500);
     } else {
-      const daysLeft = 6 - currentDayIndex;
+      unitedHeart.classList.remove('complete');
+      const daysRemaining = Math.ceil((nextMeetingDate - now) / (1000 * 60 * 60 * 24));
+      document.getElementById('united-title').textContent = 'Nuestro corazón se llena día a día';
       document.getElementById('united-message').textContent = 
-        `Faltan ${daysLeft} día${daysLeft !== 1 ? 's' : ''} para completar nuestra semana de amor. Cada latido me acerca más a usted.`;
+        `Faltan ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''} para nuestro próximo encuentro. Cada latido me acerca más a usted.`;
     }
   }
 
-  // ===== CONTADOR REGRESIVO AL SABADO 8AM =====
-  function getNextSaturday8AM() {
-    const now = new Date();
-    const currentDay = now.getDay(); // 0=Sunday, 6=Saturday
-    
-    // Calculate days until next Saturday
-    let daysUntilSaturday = 6 - currentDay;
-    
-    // If it's Saturday but before 8 AM, target is today at 8 AM
-    // If it's Saturday and after 8 AM, target is next Saturday
-    if (currentDay === 6) {
-      const targetToday = new Date(now);
-      targetToday.setHours(8, 0, 0, 0);
-      if (now < targetToday) {
-        return targetToday;
-      } else {
-        daysUntilSaturday = 7;
-      }
-    }
-    
-    const target = new Date(now);
-    target.setDate(now.getDate() + daysUntilSaturday);
-    target.setHours(8, 0, 0, 0);
-    
-    return target;
-  }
-
+  // ===== CONTADOR REGRESIVO =====
   function updateCountdown() {
-    const target = getNextSaturday8AM();
+    if (!nextMeetingDate) {
+      document.getElementById('countdown-days').textContent = '0';
+      document.getElementById('countdown-hours').textContent = '0';
+      document.getElementById('countdown-minutes').textContent = '0';
+      document.getElementById('countdown-seconds').textContent = '0';
+      return;
+    }
+
     const now = new Date();
-    const diff = target - now;
+    const diff = nextMeetingDate - now;
 
     if (diff <= 0) {
       document.getElementById('countdown-days').textContent = '0';
@@ -729,8 +891,7 @@
 
   // ===== INICIALIZAR =====
   window.addEventListener('load', () => {
-    setTimeout(updateHearts, 800);
-    updateCountdown();
+    setTimeout(updateAll, 800);
     setInterval(updateCountdown, 1000);
   });
 
