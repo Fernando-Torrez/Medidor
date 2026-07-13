@@ -157,7 +157,7 @@
 
   .hearts-section {
     width: 100%;
-    max-width: 900px;
+    max-width: 1100px;
     animation: fadeInUp 1.2s ease 0.3s both;
   }
 
@@ -197,46 +197,53 @@
     transform: translateY(-8px);
   }
 
-  .heart-day:hover .heart-icon {
+  .heart-day:hover .silhouette-icon {
     filter: brightness(1.2);
   }
 
-  .heart-wrapper {
+  .silhouette-wrapper {
     position: relative;
     width: 70px;
     height: 70px;
   }
 
-  .heart-icon {
+  .silhouette-icon {
     width: 100%;
     height: 100%;
     transition: all 0.5s ease;
     filter: drop-shadow(0 5px 15px rgba(255, 182, 193, 0.3));
   }
 
-  .heart-icon .heart-bg {
+  .silhouette-icon .silhouette-bg {
     fill: rgba(255, 255, 255, 0.5);
     stroke: rgba(255, 182, 193, 0.5);
     stroke-width: 1.5;
   }
 
-  .heart-icon .heart-fill {
-    fill: url(#heartGradient);
+  .silhouette-icon .silhouette-fill {
     stroke: none;
     clip-path: inset(100% 0 0 0);
     transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .heart-day.filled .heart-icon .heart-fill {
+  .silhouette-icon.stitch-fill .silhouette-fill {
+    fill: url(#stitchGradient);
+  }
+
+  .silhouette-icon.pollito-fill .silhouette-fill {
+    fill: url(#pollitoGradient);
+  }
+
+  .heart-day.filled .silhouette-icon .silhouette-fill {
     clip-path: inset(0 0 0 0);
   }
 
-  .heart-day.filled .heart-icon {
+  .heart-day.filled .silhouette-icon {
     filter: drop-shadow(0 5px 25px rgba(255, 158, 181, 0.6));
-    animation: heartPulse 2s ease-in-out infinite;
+    animation: silhouettePulse 2s ease-in-out infinite;
   }
 
-  @keyframes heartPulse {
+  @keyframes silhouettePulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.08); }
   }
@@ -333,7 +340,7 @@
 
   .united-text {
     text-align: center;
-    max-width: 500px;
+    max-width: 600px;
   }
 
   .united-text h3 {
@@ -344,9 +351,9 @@
   }
 
   .united-text p {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--text-medium);
-    line-height: 1.7;
+    line-height: 1.8;
     font-weight: 400;
   }
 
@@ -395,43 +402,6 @@
     margin-top: 8px;
   }
 
-  .message-section {
-    max-width: 700px;
-    text-align: center;
-    padding: 40px;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 30px;
-    box-shadow: 0 20px 60px rgba(255, 182, 193, 0.2);
-    animation: fadeInUp 1.2s ease 1.2s both;
-  }
-
-  .message-section .quote-icon {
-    font-size: 3rem;
-    color: var(--pink-soft);
-    opacity: 0.6;
-    margin-bottom: 15px;
-  }
-
-  .message-section p {
-    font-family: 'Quicksand', sans-serif;
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-    color: var(--text-dark);
-    line-height: 1.8;
-    font-style: italic;
-  }
-
-  .message-section .signature {
-    margin-top: 20px;
-    font-family: 'Quicksand', sans-serif;
-    font-size: 1rem;
-    color: var(--text-medium);
-    font-style: normal;
-    letter-spacing: 2px;
-  }
-
   .footer-section {
     text-align: center;
     padding: 20px;
@@ -471,7 +441,7 @@
 
   @media (max-width: 600px) {
     .hearts-container { gap: 10px; padding: 20px 15px; }
-    .heart-wrapper { width: 50px; height: 50px; }
+    .silhouette-wrapper { width: 50px; height: 50px; }
     .day-label { font-size: 0.7rem; }
     .united-heart-container { width: 150px; height: 150px; }
     .united-heart-container .progress-ring { width: 180px; height: 180px; top: -15px; left: -15px; }
@@ -510,10 +480,15 @@
     <div class="hearts-container" id="hearts-container">
       <svg style="position:absolute;width:0;height:0;">
         <defs>
-          <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ffb6c1"/>
-            <stop offset="50%" stop-color="#ff9eb5"/>
-            <stop offset="100%" stop-color="#ffc0cb"/>
+          <linearGradient id="stitchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7eb8e8"/>
+            <stop offset="50%" stop-color="#5a9fd4"/>
+            <stop offset="100%" stop-color="#4a8bc2"/>
+          </linearGradient>
+          <linearGradient id="pollitoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffe680"/>
+            <stop offset="50%" stop-color="#ffd54f"/>
+            <stop offset="100%" stop-color="#ffca28"/>
           </linearGradient>
           <linearGradient id="bigHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#ffb6c1"/>
@@ -543,7 +518,7 @@
       </svg>
     </div>
     <div class="united-text">
-      <h3 id="united-title">Nuestro corazón se llena día a día</h3>
+      <h3 id="united-title">Stitch y Pollito cuentan los días</h3>
       <p id="united-message">Cada día que pasa es un latido más que nos une. Aunque no nos veamos todos los días, mi corazón late por usted en cada amanecer.</p>
     </div>
   </section>
@@ -565,12 +540,6 @@
       <span class="countdown-number" id="countdown-seconds">0</span>
       <span class="countdown-label">Segundos</span>
     </div>
-  </section>
-
-  <section class="message-section">
-    <div class="quote-icon">❝</div>
-    <p>No importa la distancia ni los días que pasen sin verla, porque cada segundo que pienso en usted Mel es un segundo más cerca de volver a sus brazos. Es usted mi primer pensamiento al despertar y el último antes de dormir.</p>
-    <div class="signature">— Con todo mi amor ♥</div>
   </section>
 
   <footer class="footer-section">
@@ -641,6 +610,13 @@
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+  // ===== SILUETAS SVG =====
+  // Silueta de Stitch (orejas grandes puntiagudas, cabeza redonda, cuerpo pequeño)
+  const stitchPath = "M50 90 C35 90 26 82 26 68 L26 56 C18 52 12 40 18 26 L22 22 L32 36 C36 28 42 24 50 24 C58 24 64 28 68 36 L78 22 L82 26 C88 40 82 52 74 56 L74 68 C74 82 65 90 50 90 Z";
+  
+  // Silueta de Pollito (cuerpo redondo, cresta arriba, pico)
+  const pollitoPath = "M50 90 C32 90 22 76 22 60 C22 46 30 36 40 32 L36 20 L44 26 L48 14 L52 26 L60 20 L56 32 C66 36 74 46 74 60 C74 76 64 90 50 90 Z M72 52 L84 46 L80 60 Z";
+
   // ===== VARIABLES GLOBALES =====
   let lastMeetingDate = null;
   let nextMeetingDate = null;
@@ -648,6 +624,24 @@
   // ===== SELECTORES DE FECHA =====
   const lastMeetingInput = document.getElementById('last-meeting');
   const nextMeetingInput = document.getElementById('next-meeting');
+
+  // Establecer la fecha máxima para "última vez que nos vimos" (no puede ser mayor a hoy)
+  function setMaxDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    lastMeetingInput.max = todayStr;
+    
+    // Si la fecha guardada es mayor a hoy, ajustarla
+    if (lastMeetingInput.value && lastMeetingInput.value > todayStr) {
+      lastMeetingInput.value = todayStr;
+      lastMeetingDate = new Date(todayStr + 'T00:00:00');
+      localStorage.setItem('lastMeeting', todayStr);
+    }
+  }
+  setMaxDate();
 
   // Cargar fechas guardadas del localStorage
   const savedLastMeeting = localStorage.getItem('lastMeeting');
@@ -666,7 +660,22 @@
   // Event listeners para los selectores
   lastMeetingInput.addEventListener('change', function() {
     if (this.value) {
-      lastMeetingDate = new Date(this.value + 'T00:00:00');
+      // Validar que no sea mayor a hoy
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(this.value + 'T00:00:00');
+      
+      if (selectedDate > today) {
+        alert('La fecha de la última vez que nos vimos no puede ser mayor al día actual');
+        this.value = '';
+        lastMeetingDate = null;
+        localStorage.removeItem('lastMeeting');
+        rebuildHearts();
+        updateAll();
+        return;
+      }
+      
+      lastMeetingDate = selectedDate;
       localStorage.setItem('lastMeeting', this.value);
       rebuildHearts();
       updateAll();
@@ -682,11 +691,11 @@
     }
   });
 
-  // ===== CONSTRUIR CORAZONES DINÁMICAMENTE =====
+  // ===== CONSTRUIR SILUETAS DINÁMICAMENTE =====
   function rebuildHearts() {
     const container = document.getElementById('hearts-container');
     
-    // Limpiar corazones existentes (mantener el SVG de defs)
+    // Limpiar siluetas existentes (mantener el SVG de defs)
     const existingHearts = container.querySelectorAll('.heart-day');
     existingHearts.forEach(h => h.remove());
 
@@ -703,7 +712,7 @@
     endDate.setHours(0, 0, 0, 0);
 
     const diffTime = endDate - startDate;
-    const totalDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos días
+    const totalDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
     if (totalDays <= 0) {
       document.getElementById('hearts-title').textContent = 'Las fechas no son válidas';
@@ -712,7 +721,7 @@
 
     document.getElementById('hearts-title').textContent = `Nuestros ${totalDays} días latiendo juntos`;
 
-    // Crear un corazón por cada día
+    // Crear una silueta por cada día, alternando entre Stitch y Pollito
     for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
@@ -720,16 +729,22 @@
       const dayName = diasSemana[currentDate.getDay()];
       const dayNumber = currentDate.getDate();
       const monthName = meses[currentDate.getMonth()];
+      
+      // Alternar entre Stitch (pares) y Pollito (impares)
+      const isStitch = i % 2 === 0;
+      const currentPath = isStitch ? stitchPath : pollitoPath;
+      const fillClass = isStitch ? 'stitch-fill' : 'pollito-fill';
+      const characterName = isStitch ? 'Stitch' : 'Pollito';
 
       const heartDay = document.createElement('div');
       heartDay.className = 'heart-day';
       heartDay.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
       
       heartDay.innerHTML = `
-        <div class="heart-wrapper">
-          <svg class="heart-icon" viewBox="0 0 100 100">
-            <path class="heart-bg" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
-            <path class="heart-fill" d="M50 88 C20 65 5 45 5 30 C5 15 18 5 30 5 C38 5 45 9 50 16 C55 9 62 5 70 5 C82 5 95 15 95 30 C95 45 80 65 50 88Z"/>
+        <div class="silhouette-wrapper">
+          <svg class="silhouette-icon ${fillClass}" viewBox="0 0 100 100">
+            <path class="silhouette-bg" d="${currentPath}"/>
+            <path class="silhouette-fill" d="${currentPath}"/>
           </svg>
         </div>
         <span class="day-label">${dayName}</span>
@@ -739,7 +754,7 @@
       container.appendChild(heartDay);
     }
 
-    // Agregar event listeners a los nuevos corazones
+    // Agregar event listeners a las nuevas siluetas
     addHeartClickListeners();
   }
 
@@ -750,7 +765,7 @@
     updateUnitedHeart();
   }
 
-  // ===== LOGICA DE CORAZONES =====
+  // ===== LOGICA DE SILUETAS =====
   function updateHearts() {
     if (!lastMeetingDate || !nextMeetingDate) return;
 
@@ -777,7 +792,7 @@
     });
   }
 
-  // ===== ACTUALIZAR CORAZÓN CENTRAL =====
+  // ===== ACTUALIZAR CORAZÓN CENTRAL CON MENSAJE DINÁMICO =====
   function updateUnitedHeart() {
     if (!lastMeetingDate || !nextMeetingDate) return;
 
@@ -807,22 +822,24 @@
 
     // Actualizar corazón central
     const unitedHeart = document.getElementById('united-heart');
+    const daysRemaining = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
     
     if (progress >= 1) {
       unitedHeart.classList.add('complete');
-      document.getElementById('united-title').textContent = '¡Nuestro corazón está completo!';
-      document.getElementById('united-message').textContent = '¡Ha llegado el día! Cada momento juntos es un regalo que atesoro con todo mi ser. ¡La amo!';
+      document.getElementById('united-title').textContent = '¡La jornada ha llegado a su fin!';
+      document.getElementById('united-message').textContent = 
+        'Stitch y Pollito han cumplido su dulce misión de acompañar cada amanecer y cada noche. Hoy se van a descansar, felices, para que Mel y Fer tengan el mundo solo para ellos: un día entero para abrazarse sin prisa, para reírse sin testigos y para regalarse todo el amor que se merecen.';
     } else if (progress <= 0) {
       unitedHeart.classList.remove('complete');
-      document.getElementById('united-title').textContent = 'Esperando nuestro momento';
-      document.getElementById('united-message').textContent = 'Aún no ha llegado el momento, pero cada segundo cuenta para volver a verla.';
+      document.getElementById('united-title').textContent = 'Comienza la cuenta';
+      document.getElementById('united-message').textContent = 
+        `En ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''}, Stitch y Pollito habrán completado su dulce jornada de acompañamiento. Mientras tanto, ellos cuidan cada latido que los acerca a Mel y Fer.`;
     } else {
       unitedHeart.classList.remove('complete');
-      const daysRemaining = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
       const percentComplete = Math.round(progress * 100);
-      document.getElementById('united-title').textContent = 'Nuestro corazón se llena día a día';
+      document.getElementById('united-title').textContent = 'Stitch y Pollito cuentan los días';
       document.getElementById('united-message').textContent = 
-        `Faltan ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''} para nuestro próximo encuentro. Nuestro corazón está ${percentComplete}% completo. Cada latido me acerca más a usted.`;
+        `En ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''}, nuestros queridos Stitch y Pollito habrán completado su dulce jornada de acompañamiento y cariño. Entonces, merecidamente, se irán a descansar para que Mel y Fer puedan regalarse el lujo de un día entero solo para ellos: para amarse sin prisa, sin relojes y sin testigos. Nuestro corazón va ${percentComplete}% completo.`;
     }
   }
 
@@ -861,7 +878,7 @@
     document.getElementById('countdown-seconds').textContent = seconds;
   }
 
-  // ===== CLICK EN CORAZONES =====
+  // ===== CLICK EN SILUETAS =====
   function addHeartClickListeners() {
     document.querySelectorAll('.heart-day').forEach(heart => {
       heart.addEventListener('click', function() {
