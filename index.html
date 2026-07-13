@@ -833,7 +833,7 @@
       unitedHearts.classList.add('complete');
       document.getElementById('united-title').textContent = '¡La jornada ha llegado a su fin!';
       document.getElementById('united-message').textContent = 
-        'Stitch y Pollito han cumplido su dulce misión de acompañar cada amanecer y cada noche. Hoy se van a descansar, felices, para que Mel y Fer tengan el mundo solo para ellos: un día entero para abrazarse sin prisa, para reírse sin testigos y para regalarse todo el amor que se merecen.';
+        'Stitch y Pollito han cumplido su dulce misión de acompañar cada amanecer y cada noche. Hoy se van a descansar, felices, para que Mel y Fer tengan el mundo solo para ellos: un día para abrazarse sin prisa, para reírse sin testigos y para regalarse todo el amor que se merecen.';
     } else if (progress <= 0) {
       unitedHearts.classList.remove('complete');
       document.getElementById('united-title').textContent = 'Comienza la cuenta';
@@ -844,7 +844,7 @@
       const percentComplete = Math.round(progress * 100);
       document.getElementById('united-title').textContent = 'Stitch y Pollito cuentan los días';
       document.getElementById('united-message').textContent = 
-        `En ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''}, nuestros queridos Stitch y Pollito habrán completado su dulce jornada de acompañamiento y cariño. Entonces, merecidamente, se irán a descansar para que Mel y Fer puedan regalarse el lujo de un día entero solo para ellos: para amarse sin prisa, sin relojes y sin testigos. Nuestro corazón va ${percentComplete}% completo.`;
+        `En ${daysRemaining} día${daysRemaining !== 1 ? 's' : ''}, nuestros queridos Stitch y Pollito habrán completado su dulce jornada de acompañamiento y cariño. Entonces, merecidamente, se irán a descansar para que Mel y Fer puedan regalarse el lujo de un día solo para ellos: para abrazarse sin prisa, darse beshitos y mucho amor. Nuestro corazón va ${percentComplete}% completo.`;
     }
   }
 
